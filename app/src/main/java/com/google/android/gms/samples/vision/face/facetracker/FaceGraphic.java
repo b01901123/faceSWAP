@@ -15,9 +15,14 @@
  */
 package com.google.android.gms.samples.vision.face.facetracker;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.google.android.gms.samples.vision.face.facetracker.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.face.Face;
@@ -52,8 +57,14 @@ class FaceGraphic extends GraphicOverlay.Graphic {
     private int mFaceId;
     private float mFaceHappiness;
 
-    FaceGraphic(GraphicOverlay overlay) {
+    private Bitmap mask;
+
+
+    FaceGraphic(GraphicOverlay overlay,Bitmap mask) {
         super(overlay);
+
+        //for add mask
+        this.mask = mask;
 
         mCurrentColorIndex = (mCurrentColorIndex + 1) % COLOR_CHOICES.length;
         final int selectedColor = COLOR_CHOICES[mCurrentColorIndex];
@@ -69,6 +80,8 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         mBoxPaint.setColor(selectedColor);
         mBoxPaint.setStyle(Paint.Style.STROKE);
         mBoxPaint.setStrokeWidth(BOX_STROKE_WIDTH);
+        //public Bitmap mask = BitmapFactory.decodeResource(FaceTrackerActivity.getResources(),R.drawable.boo);
+
     }
 
     void setId(int id) {
@@ -112,5 +125,8 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         float right = x + xOffset;
         float bottom = y + yOffset;
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
+
+        canvas.drawBitmap(mask,left,top,null);
+        //canvas.drawBitmap(mask, new Rect(0,0,200,200), new Rect((int)left,(int)top,(int)right,(int)bottom) , null);
     }
 }
